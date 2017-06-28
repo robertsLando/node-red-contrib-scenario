@@ -113,38 +113,11 @@
 <script type="text/x-red" data-help-name="scenario">
 <p>Send a list of output messages with differents delays between them</p>
 
-<h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type"> string | Int </span>
-        </dt>
-        <dd> the number or the array of numbers to decode in Float 32 bit. </dd>
-        <dt class="optional">Decimals Number <span class="property-type">Number</span></dt>
-        <dd> max digits you want to keep after the '.'.</dd>
-    </dl>
-
- <h3>Outputs</h3>
-     <ol class="node-ports">
-         <li>Standard output
-             <dl class="message-properties">
-                 <dt>payload <span class="property-type">Number | Array</span></dt>
-                 <dd>the standard output of the command.</dd>
-             </dl>
-         </li>
-         <li>Standard error
-             <dl class="message-properties">
-                 <dt>payload <span class="property-type">string</span></dt>
-                 <dd>the standard error of the command.</dd>
-             </dl>
-         </li>
-     </ol>
-
 <h3>Details</h3>
-    <p><code>msg.payload</code> must be an Integer 32 bit or a Binary string like
-    '1000000010010001111010111000011' (3.14) if the type is wrong an error is returned,
-    if the input is an Array the index of the wrong element is returned with the error.
-    <p>Decimals digits can be configured in the node or if left blank the numbers will not
-    be truncated</p>
+    <p>Send <code>msg.payload = "start"</code> in input to start the scenario.</p>
+    <p>Send <code>msg.payload = "stop"</code> in input to stop the scenario.</p>
+    <p>The node will start to output scenes <code>string</code> added in node configuration, scenes <code>value</code> can be <code>string</code>, <code>Number</code>, <code>json</code> or <code>bool</code>
+    each scene has a <code>time</code> of duration in millisecond</p>
 <h3>References</h3>
     <ul>
         <li><a href="https://github.com/robertsLando/node-red-contrib-scenario">GitHub</a> - the node github repository</li>

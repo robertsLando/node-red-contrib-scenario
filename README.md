@@ -6,5 +6,3 @@ Node-Red Node that can be configured to send a list of output messages with diff
 Run the following command in the root directory of your Node-RED install
 
     npm install node-red-contrib-scenario
-
-# Usage
