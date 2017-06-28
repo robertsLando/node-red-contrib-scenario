@@ -8,16 +8,11 @@
         },
         inputs:1,
         outputs:1,
-        icon: "light.png",
+        icon: "arrow-in.png",
         label: function() {
             return this.name||"scenario";
         },
         oneditprepare: function() {
-            $("#node-input-size").elementSizer({
-                width: "#node-input-width",
-                height: "#node-input-height",
-                group: "#node-input-group"
-            });
 
             this.resizeRule = function(scene,newWidth) {
                 scene.find(".node-input-scene-value").width(newWidth);
@@ -32,8 +27,8 @@
 
                 $('<i style="color: #eee; cursor: move; margin-left: 3px;" class="node-input-scene-handle fa fa-bars"></i>').appendTo(row);
 
-                var valueField = $('<input/>',{class:"node-input-scene-value",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Value',value:scene.value}).appendTo(row).typedInput({default: 'str',types:['str','num','bool']});
-                var labelField = $('<input/>',{class:"node-input-scene-time",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Time', value:scene.time}).appendTo(row).typedInput({default:'num',types:['num']};
+                var valueField = $('<input/>',{class:"node-input-scene-value",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Value',value:scene.value}).appendTo(row).typedInput({default: 'str',types:['str','num','bool', 'json']});
+                var labelField = $('<input/>',{class:"node-input-scene-time",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Time', value:scene.time}).appendTo(row).typedInput({default:'num',types:['num']});
 
                 var finalspan = $('<span/>',{style:"float: right;margin-right: 10px;"}).appendTo(row);
                 var deleteButton = $('<a/>',{href:"#",class:"editor-button editor-button-small", style:"margin-top: 7px; margin-left: 5px;"}).appendTo(finalspan);
@@ -55,7 +50,7 @@
             });
 
             for (var i=0; i<this.scenes.length; i++) {
-                var scene = this.scene[i];
+                var scene = this.scenes[i];
                 generateScene(i+1,scene);
             }
 
@@ -80,6 +75,9 @@
                 }
                 if (scene.find(".node-input-scene-value").typedInput('type') === "bool") {
                     o.value = (o.value == "true");
+                }
+                if (scene.find(".node-input-scene-value").typedInput('type') === "json") {
+                    o.value = JSON.parse(o.value);
                 }
                 node.scenes.push(o);
             });
@@ -113,7 +111,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="scenario">
-<p>Send a list of output messages with a differents delays between them</p>
+<p>Send a list of output messages with differents delays between them</p>
 
 <h3>Inputs</h3>
     <dl class="message-properties">

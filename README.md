@@ -1,5 +1,5 @@
 # node-red-contrib-float
-Node-Red Node that can be configured to send a list of output messages with a differents delays between them
+Node-Red Node that can be configured to send a list of output messages with differents delays between them
 
 # Install
 
