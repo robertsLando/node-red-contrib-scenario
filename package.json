@@ -1,0 +1,25 @@
+{
+  "name": "node-red-contrib-scenario",
+  "version": "1.0.0",
+  "description": "Node-Red Node that can be configured to send a list of output messages with a differents delays between them",
+  "main": "scenario.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red": {
+    "nodes": {
+      "scenario": "scenario.js"
+    }
+  },
+  "keywords": [ "node-red", "robertsLando", "Scenario", "Timing", "Scene" ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertsLando/node-red-contrib-scenario.git"
+  },
+  "author": "Daniel Lando",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robertsLando/node-red-contrib-scenario/issues"
+  },
+  "homepage": "https://github.com/robertsLando/node-red-contrib-scenario#readme"
+}

@@ -1,0 +1,154 @@
+<script type="text/javascript">
+    RED.nodes.registerType('scenario',{
+        category: 'function',
+        color: '#3FADB5',
+        defaults: {
+            name: {value:""},
+            scenes: {value:[{value: '', time : ''}]},
+        },
+        inputs:1,
+        outputs:1,
+        icon: "light.png",
+        label: function() {
+            return this.name||"scenario";
+        },
+        oneditprepare: function() {
+            $("#node-input-size").elementSizer({
+                width: "#node-input-width",
+                height: "#node-input-height",
+                group: "#node-input-group"
+            });
+
+            this.resizeRule = function(scene,newWidth) {
+                scene.find(".node-input-scene-value").width(newWidth);
+                scene.find(".node-input-scene-time").width(newWidth);
+            }
+
+            function generateScene(i, scene) {
+                var container = $('<li/>',{style:"background: #fff; margin:0; padding:8px 0px 0px; border-bottom: 1px solid #ccc;"});
+                var row = $('<div/>').appendTo(container);
+                var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
+                var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 120px;"}).appendTo(container);
+
+                $('<i style="color: #eee; cursor: move; margin-left: 3px;" class="node-input-scene-handle fa fa-bars"></i>').appendTo(row);
+
+                var valueField = $('<input/>',{class:"node-input-scene-value",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Value',value:scene.value}).appendTo(row).typedInput({default: 'str',types:['str','num','bool']});
+                var labelField = $('<input/>',{class:"node-input-scene-time",type:"text",style:"margin-left: 7px; width: 135px;", placeholder: 'Time', value:scene.time}).appendTo(row).typedInput({default:'num',types:['num']};
+
+                var finalspan = $('<span/>',{style:"float: right;margin-right: 10px;"}).appendTo(row);
+                var deleteButton = $('<a/>',{href:"#",class:"editor-button editor-button-small", style:"margin-top: 7px; margin-left: 5px;"}).appendTo(finalspan);
+                $('<i/>',{class:"fa fa-remove"}).appendTo(deleteButton);
+
+                deleteButton.click(function() {
+                    container.css({"background":"#fee"});
+                    container.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                });
+
+                $("#node-input-scene-container").append(container);
+            }
+
+            $("#node-input-add-scene").click(function() {
+                generateScene($("#node-input-scene-container").children().length+1, {});
+                $("#node-input-scene-container-div").scrollTop($("#node-input-scene-container-div").get(0).scrollHeight);
+            });
+
+            for (var i=0; i<this.scenes.length; i++) {
+                var scene = this.scene[i];
+                generateScene(i+1,scene);
+            }
+
+            $( "#node-input-scene-container" ).sortable({
+                axis: "y",
+                handle:".node-input-scene-handle",
+                cursor: "move"
+            });
+        },
+        oneditsave: function() {
+            var scenes = $("#node-input-scene-container").children();
+            var node = this;
+            node.scenes = [];
+            scenes.each(function(i) {
+                var scene = $(this);
+                var o = {
+                    value: scene.find(".node-input-scene-value").val(),
+                    time: scene.find(".node-input-scene-time").val()
+                };
+                if (scene.find(".node-input-scene-value").typedInput('type') === "num") {
+                    o.value = Number(o.value);
+                }
+                if (scene.find(".node-input-scene-value").typedInput('type') === "bool") {
+                    o.value = (o.value == "true");
+                }
+                node.scenes.push(o);
+            });
+        },
+        oneditresize: function() {
+            var scenes = $("#node-input-scene-container").children();
+            var newWidth = ($("#node-input-scene-container").width() - 175)/2;
+            var node = this;
+            scenes.each(function(i) {
+                node.resizeRule($(this),newWidth);
+            });
+        }
+
+    });
+</script>
+
+<script type="text/x-red" data-template-name="scenario">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row node-input-scene-container-row" style="margin-bottom: 0px;width: 100%">
+        <label for="node-input-width" style="vertical-align:top"><i class="fa fa-list-alt"></i> Scenes</label>
+        <div id="node-input-scene-container-div" style="box-sizing: border-box; border-radius: 5px; height: 257px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;display: inline-block; width: calc(70% + 15px);">
+            <ol id="node-input-scene-container" style=" list-style-type:none; margin: 0;"></ol>
+        </div>
+    </div>
+    <div class="form-row">
+        <a href="#" class="editor-button editor-button-small" id="node-input-add-scene" style="margin-top: 4px; margin-left: 103px;"><i class="fa fa-plus"></i> <span>scene</span></a>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="scenario">
+<p>Send a list of output messages with a differents delays between them</p>
+
+<h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type"> string | Int </span>
+        </dt>
+        <dd> the number or the array of numbers to decode in Float 32 bit. </dd>
+        <dt class="optional">Decimals Number <span class="property-type">Number</span></dt>
+        <dd> max digits you want to keep after the '.'.</dd>
+    </dl>
+
+ <h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">Number | Array</span></dt>
+                 <dd>the standard output of the command.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+
+<h3>Details</h3>
+    <p><code>msg.payload</code> must be an Integer 32 bit or a Binary string like
+    '1000000010010001111010111000011' (3.14) if the type is wrong an error is returned,
+    if the input is an Array the index of the wrong element is returned with the error.
+    <p>Decimals digits can be configured in the node or if left blank the numbers will not
+    be truncated</p>
+<h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/robertsLando/node-red-contrib-scenario">GitHub</a> - the node github repository</li>
+    </ul>
+</script>
