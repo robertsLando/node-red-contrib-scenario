@@ -9,6 +9,8 @@ module.exports = function(RED) {
         var i = 0;
         var enabled = false;
 
+        node.status({fill:"yellow",shape:"ring",text:"Stopped"});
+
         function sendScene(){
           if(enabled){
             node.send({payload:scenarios[i].value});
@@ -27,15 +29,29 @@ module.exports = function(RED) {
               enabled = true;
               i = 0;
               if(timeout !== null) clearTimeout(timeout);
-
-              sendScene();
+              if(!scenarios || scenarios.length == 0) node.error("No scene found. Add scenes in node configuration.");
+              else
+                sendScene();
             break;
 
             case "stop":
               if(timeout !== null) clearTimeout(timeout);
               enabled = true;
               i = 0;
-              node.status({fill:"red",shape:"ring",text:"Stopped"});
+              node.status({fill:"yellow",shape:"ring",text:"Stopped"});
+            break;
+
+            case "init":
+              if(msg.scenes && msg.scenes.length > 0){
+                  for(var i=0;i<msg.scenes.length;i++){
+                      if(!msg.scenes[i].value || !msg.scenes[i].time || parseInt(msg.scenes[i].time) < 0){
+                        node.error("Scene index " + i + " not valid.");
+                        break;
+                    }
+                  }
+                  if(i < msg.scenes.length) node.error("Invalid input scenes, check debug tab");
+                  else scenarios = msg.scenes;
+              }
             break;
           }
 

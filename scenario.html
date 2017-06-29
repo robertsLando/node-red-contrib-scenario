@@ -1,14 +1,14 @@
 <script type="text/javascript">
     RED.nodes.registerType('scenario',{
         category: 'function',
-        color: '#3FADB5',
+        color: '#FFCC66',
         defaults: {
             name: {value:""},
             scenes: {value:[{value: '', time : ''}]},
         },
         inputs:1,
         outputs:1,
-        icon: "arrow-in.png",
+        icon: "light.png",
         label: function() {
             return this.name||"scenario";
         },
@@ -116,7 +116,8 @@
 <h3>Details</h3>
     <p>Send <code>msg.payload = "start"</code> in input to start the scenario.</p>
     <p>Send <code>msg.payload = "stop"</code> in input to stop the scenario.</p>
-    <p>The node will start to output scenes <code>string</code> added in node configuration, scenes <code>value</code> can be <code>string</code>, <code>Number</code>, <code>json</code> or <code>bool</code>
+    <p>Send <code>msg.payload = "init" msg.scenes = [value: (Object, Number, Bool), time: (Number)]</code> in input to override node configuration scenes.</p>
+    <p>The node will start to output scenes <code>value</code> added in node configuration, scenes <code>value</code> can be <code>String</code>, <code>Number</code>, <code>JSON</code> or <code>Bool</code>
     each scene has a <code>time</code> of duration in millisecond</p>
 <h3>References</h3>
     <ul>
