@@ -5,6 +5,8 @@
         defaults: {
             name: {value:""},
             scenes: {value:[{value: '', time : ''}]},
+            repeatType: {value: 'once'},
+            repeatTimes: {value: 1, validate: function(val) { return val > 0; } }
         },
         inputs:1,
         outputs:1,
@@ -59,6 +61,16 @@
                 handle:".node-input-scene-handle",
                 cursor: "move"
             });
+
+            $('#node-input-repeatType').on("change", function(){
+                if($(this).val() === 'custom')
+                    $('#node-input-repeatTimes').show().prev().show();
+                else
+                    $('#node-input-repeatTimes').hide().prev().hide();
+            });        
+
+            $('#node-input-repeatType').trigger('change');
+
         },
         oneditsave: function() {
             var scenes = $("#node-input-scene-container").children();
@@ -108,6 +120,18 @@
     <div class="form-row">
         <a href="#" class="editor-button editor-button-small" id="node-input-add-scene" style="margin-top: 4px; margin-left: 103px;"><i class="fa fa-plus"></i> <span>scene</span></a>
     </div>
+    <div class="form-row">
+        <label for="node-input-repeatType"><i class="fa fa-repeat"></i> Repeat</label>
+        <select id="node-input-repeatType">
+            <option value="once">once</option>
+            <option value="custom">custom times</option>
+            <option value="infinite" selected="selected">infinite loop</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-repeatTimes"><i class="icon-tag"></i> Repeat count</label>
+        <input type="number" id="node-input-repeatTimes" style="width: 30%;">
+    </div>    
 </script>
 
 <script type="text/x-red" data-help-name="scenario">
@@ -119,6 +143,7 @@
     <p>Send <code>msg.payload = "init" msg.scenes = [value: (Object, Number, Bool), time: (Number)]</code> in input to override node configuration scenes.</p>
     <p>The node will start to output scenes <code>value</code> added in node configuration, scenes <code>value</code> can be <code>String</code>, <code>Number</code>, <code>JSON</code> or <code>Bool</code>
     each scene has a <code>time</code> of duration in millisecond</p>
+    <p>You can choose how many times the node will repeat the scene sequence. Possible values are once, custom times and infinite loop.</p>
 <h3>References</h3>
     <ul>
         <li><a href="https://github.com/robertsLando/node-red-contrib-scenario">GitHub</a> - the node github repository</li>
